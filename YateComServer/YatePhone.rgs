@@ -1,0 +1,23 @@
+HKCR
+{
+	YATE.Phone.1 = s 'Yate Engine Class'
+	{
+		CLSID = s '{65354AA7-C3B0-4973-BE66-EEA879AFB090}'
+	}
+	YATE.Phone = s 'Yate Engine Class'
+	{
+		CLSID = s '{65354AA7-C3B0-4973-BE66-EEA879AFB090}'
+		CurVer = s 'YATE.Engine.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {65354AA7-C3B0-4973-BE66-EEA879AFB090} = s 'Yate Phone Class'
+		{
+			ProgID = s 'YATE.Phone.1'
+			VersionIndependentProgID = s 'YATE.Phone'
+			ForceRemove 'Programmable'
+			LocalServer32 = s '%MODULE% -W --'
+			'TypeLib' = s '{7D62D7AA-8842-4a39-9A40-30A6678432E4}'
+		}
+	}
+}

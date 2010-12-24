@@ -1,0 +1,24 @@
+HKCR
+{
+	YATE.Engine.1 = s 'Yate Engine Class'
+	{
+		CLSID = s '{A5683D87-78EC-4eab-A76D-B6334DE6F7FB}'
+	}
+	YATE.Engine = s 'Yate Engine Class'
+	{
+		CLSID = s '{A5683D87-78EC-4eab-A76D-B6334DE6F7FB}'
+		CurVer = s 'YATE.Engine.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {A5683D87-78EC-4eab-A76D-B6334DE6F7FB} = s 'Yate Engine Class'
+		{
+			ProgID = s 'YATE.Engine.1'
+			VersionIndependentProgID = s 'YATE.Engine'
+			ForceRemove 'Programmable'
+			LocalServer32 = s '%MODULE% -W --'
+			'TypeLib' = s '{7D62D7AA-8842-4a39-9A40-30A6678432E4}'
+
+		}
+	}
+}

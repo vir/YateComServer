@@ -1,0 +1,23 @@
+HKCR
+{
+	YATE.Message.1 = s 'YateMessage Class'
+	{
+		CLSID = s '{F049EC7F-53A6-4F28-B3D0-41CE0426BD59}'
+	}
+	YATE.Message = s 'YateMessage Class'
+	{
+		CLSID = s '{F049EC7F-53A6-4F28-B3D0-41CE0426BD59}'
+		CurVer = s 'YATE.Message.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {F049EC7F-53A6-4F28-B3D0-41CE0426BD59} = s 'YateMessage Class'
+		{
+			ProgID = s 'YATE.Message.1'
+			VersionIndependentProgID = s 'YATE.Message'
+			ForceRemove 'Programmable'
+			LocalServer32 = s '%MODULE% -W --'
+			'TypeLib' = s '{7D62D7AA-8842-4a39-9A40-30A6678432E4}'
+		}
+	}
+}

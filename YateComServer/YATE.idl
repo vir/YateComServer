@@ -1,0 +1,167 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(6341B06D-41D2-4a56-9F6A-4CFBFF66A922),
+	dual,
+	nonextensible,
+	helpstring("IYateNamedList Interface"),
+	pointer_default(unique)
+]
+interface IYateNamedList : IDispatch{
+	[propget, id(1), helpstring("property Name")] HRESULT Name([out, retval] BSTR* pVal);
+	[propput, id(1), helpstring("property Name")] HRESULT Name([in] BSTR newVal);
+	[propget, id(2), helpstring("property ParamsCount")] HRESULT ParamsCount([out, retval] ULONG* pVal);
+	[id(3), helpstring("method GetNth")] HRESULT GetNth([in] ULONG Index, [out] BSTR* pKey, [out] BSTR* pValue);
+	[id(4), helpstring("method GetParam")] HRESULT GetParam([in] BSTR Key, [out,retval] BSTR* pValue);
+	[id(5), helpstring("method SetParam")] HRESULT SetParam([in] BSTR Key, [in] BSTR Value);
+	[id(6), helpstring("method AddParam")] HRESULT AddParam([in] BSTR Key, [in] BSTR Value);
+	[id(7), helpstring("method ClearParam")] HRESULT ClearParam([in] BSTR Key);
+};
+
+[
+	object,
+	uuid(8C6F5C25-1E8E-4db5-9DE3-1FACC52945BE),
+	dual,
+	nonextensible,
+	helpstring("IYateMessage Interface"),
+	pointer_default(unique)
+]
+interface IYateMessage : IYateNamedList{
+	[propget, id(8), helpstring("property RetValue")] HRESULT RetValue([out, retval] BSTR* pVal);
+	[propput, id(8), helpstring("property RetValue")] HRESULT RetValue([in] BSTR newVal);
+};
+
+[
+	object, local,
+	uuid(8A92F04A-95DC-46cf-B4AB-A8DEBE343C24),
+	restricted, hidden,
+	helpstring("Private interface to access original objects pointers"),
+	pointer_default(unique)
+]
+interface IYateOrigPointer : IUnknown {
+	[propget, helpstring("property OrigPtr")] HRESULT OrigPtr([out, retval] void** pVal);
+	[propput, helpstring("property OrigPtr")] HRESULT OrigPtr([in] void* newVal);
+	[propget, helpstring("property DeleteOrigObject")] HRESULT DeleteOrigObject([out, retval] BOOL* pVal);
+	[propput, helpstring("property DeleteOrigObject")] HRESULT DeleteOrigObject([in] BOOL newVal);
+};
+
+
+[
+	object,
+	uuid(0354B1A2-EF68-43aa-9F51-0DCD2F51C954),
+	dual,
+	nonextensible,
+	helpstring("IYateEngine Interface"),
+	pointer_default(unique)
+]
+interface IYateEngine : IDispatch{
+	[id(1), helpstring("method Dispatch")] HRESULT Dispatch([in,out] IYateMessage** ppMessage, [out, retval] VARIANT_BOOL* pHandled);
+	[id(2), helpstring("method Enqueue")] HRESULT Enqueue([in] IYateMessage* pMessage);
+	[id(3), helpstring("method InstallMessageRelay")] HRESULT InstallMessageRelay([in] BSTR Name, [in] LONG Priority, [in] LONG IdNum);
+	[id(4), helpstring("method UninstallMessageRelay")] HRESULT UninstallMessageRelay([in] BSTR Name);
+};
+
+typedef [uuid(54C34A85-F18A-4edf-9A66-B08A9D0D329F), public]
+enum
+{
+	//Общие коды завершения
+	YATE_PHONE_IDLE = 0,
+	YATE_PHONE_REGISTERED = 1,
+	YATE_PHONE_CALLING = 2,
+	YATE_PHONE_RINGING = 3,
+	YATE_PHONE_TALKING = 4
+} EnumYatePhoneState;
+
+[
+	object,
+	uuid(A7D4257E-B43D-4000-A8EB-52C173888407),
+	dual,
+	nonextensible,
+	helpstring("IYatePhone Interface"),
+	pointer_default(unique)
+]
+interface IYatePhone : IDispatch{
+	[id(1), helpstring("method Login")] HRESULT Login();
+	[id(2), helpstring("method Dial")] HRESULT Dial([in] BSTR CalledNumber, [out, retval] VARIANT_BOOL* pSuccess);
+	[id(3), helpstring("method Answer")] HRESULT Answer([out, retval] VARIANT_BOOL* pSuccess);
+	[id(4), helpstring("method Hangup")] HRESULT Hangup();
+	[id(5), helpstring("method Logout")] HRESULT Logout();
+	[propget, id(6), helpstring("property Protocol")] HRESULT Protocol([out, retval] BSTR* pVal);
+	[propput, id(6), helpstring("property Protocol")] HRESULT Protocol([in] BSTR newVal);
+	[propget, id(7), helpstring("property Domain")] HRESULT Domain([out, retval] BSTR* pVal);
+	[propput, id(7), helpstring("property Domain")] HRESULT Domain([in] BSTR newVal);
+	[propget, id(8), helpstring("property Server")] HRESULT Server([out, retval] BSTR* pVal);
+	[propput, id(8), helpstring("property Server")] HRESULT Server([in] BSTR newVal);
+	[propget, id(9), helpstring("property Username")] HRESULT Username([out, retval] BSTR* pVal);
+	[propput, id(9), helpstring("property Username")] HRESULT Username([in] BSTR newVal);
+	[propget, id(10), helpstring("property Password")] HRESULT Password([out, retval] BSTR* pVal);
+	[propput, id(10), helpstring("property Password")] HRESULT Password([in] BSTR newVal);
+	[propget, id(11), helpstring("property State")] HRESULT State([out, retval] EnumYatePhoneState* pVal);
+}
+
+[
+	uuid(7D62D7AA-8842-4a39-9A40-30A6678432E4),
+	version(1.0),
+	helpstring("YateComServer 1.0 Type Library")
+]
+library YateComServerLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(65A38DAD-52EF-469B-BF1F-31658CC4C49F),
+		helpstring("_IYateEngineEvents Interface")
+	]
+	dispinterface _IYateEngineEvents
+	{
+	properties:
+	methods:
+		[id(1), helpstring("method OnMessage*")] HRESULT OnMessage([in] IYateMessage* pMessage, [out, retval] VARIANT_BOOL* pHandled);
+	};
+
+	[
+		uuid(A5683D87-78EC-4eab-A76D-B6334DE6F7FB),
+		helpstring("Yate Engine Class")
+	]
+	coclass YateEngine
+	{
+		[default] interface IYateEngine;
+		[default, source] dispinterface _IYateEngineEvents;
+	};
+
+	[
+		uuid(DFBC5262-A1DD-4019-B338-8A68BE0CBCD7),
+		helpstring("_IYatePhoneEvents Interface")
+	]
+	dispinterface _IYatePhoneEvents
+	{
+	properties:
+	methods:
+		[id(1), helpstring("method OnStateChange")] HRESULT OnStateChange([in] EnumYatePhoneState NewState);
+		[id(2), helpstring("method OnLogin")] HRESULT OnLogin([in] VARIANT_BOOL LoggedIn, [in] BSTR ReasonMsg);
+		[id(3), helpstring("method OnIndication")] HRESULT OnIndication([in] BSTR IndicationName);
+		[id(4), helpstring("method OnIncomingCall")] HRESULT OnIncomingCall([in] BSTR CallingNumber);
+		[id(5), helpstring("method OnDisconnect")] HRESULT OnDisconnect([in] BSTR Reason);
+	};
+
+	[
+		uuid(65354AA7-C3B0-4973-BE66-EEA879AFB090),
+		helpstring("Yate Phone Class")
+	]
+	coclass YatePhone
+	{
+		[default] interface IYatePhone;
+		[default, source] dispinterface _IYatePhoneEvents;
+	};
+
+	[
+		uuid(F049EC7F-53A6-4F28-B3D0-41CE0426BD59),
+		helpstring("YateMessage Class")
+	]
+	coclass YateMessage
+	{
+		[default] interface IYateMessage;
+	};
+};
+
